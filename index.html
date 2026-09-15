@@ -29,7 +29,31 @@
         }
 
         const parts = await Promise.all(responses.map(response => response.text()));
-        const html = parts.join('');
+        const responsiveFix = `
+<style>
+  .intro-title {
+    font-size:clamp(30px, 4.2vw, 42px) !important;
+    white-space:nowrap;
+  }
+
+  @media (max-width:650px) {
+    .intro-screen { padding:16px !important; }
+    .intro-title {
+      white-space:normal;
+      font-size:30px !important;
+      line-height:1.08 !important;
+    }
+    .intro-subtitle {
+      font-size:18px !important;
+      margin-bottom:18px !important;
+    }
+    .intro-content { padding:22px 20px 18px !important; }
+    .intro-item { font-size:15px !important; }
+    .intro-footer { padding:16px 20px !important; }
+  }
+</style>`;
+
+        const html = parts.join('').replace('</head>', responsiveFix + '</head>');
 
         document.open();
         document.write(html);

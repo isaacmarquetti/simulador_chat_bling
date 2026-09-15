@@ -1,0 +1,344 @@
+iv>
+
+        <div class="details-field">
+          <span class="details-label">CPF do contato</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">ID da reclamação</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Chamado encerrado RA</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Link card IGB</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Crédito</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Cnpjcliente3</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Usuário que fez abertura do chamado</span>
+          <span class="details-value">cliente</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">ID Empresa</span>
+          <span class="details-value">0000000000</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Plano do cliente</span>
+          <span class="details-value">Plano Titânio Tier 1</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Ambiente (Beta, Quente)</span>
+          <span class="details-value">Beta</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Situação da conta</span>
+          <span class="details-value">Pagante</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Suporte Premium</span>
+          <span class="details-value">Não</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">UF</span>
+          <span class="details-value">RJ</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Município</span>
+          <span class="details-value">Rio de Janeiro</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Regime Tributário</span>
+          <span class="details-value">Regime Normal</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Espaço Utilizado</span>
+          <span class="details-value">27.01</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Nome Empresa</span>
+          <span class="details-value">Robozão Tech Ltda</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Status do Usuário de Suporte</span>
+          <span class="details-value">Sim</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Usuário administrador</span>
+          <span class="details-value">Não</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Contato ID</span>
+          <span class="details-value">0000000000</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="details-card">
+      <button type="button" class="details-head"
+        data-help-title="Dados da organização"
+        data-help-text="Mostra a organização vinculada ao contato, quando houver uma organização associada ao cadastro.">
+        <span>Dados da organização</span><span>⌃</span>
+      </button>
+      <div class="details-content">
+        <div class="details-value" style="padding-bottom:8px;">Nenhuma organização atribuída</div>
+      </div>
+    </section>
+
+    <section class="details-card">
+      <button type="button" class="details-head"
+        data-help-title="Históricos do contato"
+        data-help-text="Permite consultar o histórico de conversas e tickets relacionados ao contato atendido.">
+        <span>Históricos do contato</span><span>⌃</span>
+      </button>
+      <div class="details-content">
+        <div class="details-section-line"><span>Conversas</span><span>⌄</span></div>
+        <div class="details-section-line"><span>Tickets</span><span>⌄</span></div>
+      </div>
+    </section>
+  </aside>
+</div>
+</div>
+
+<div class="tour-layer" id="tourLayer" aria-live="polite">
+  <div class="tour-highlight" id="tourHighlight"></div>
+  <div class="tour-tooltip" id="tourTooltip" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="tour-step" id="tourStepLabel">Tutorial</div>
+    <h2 class="tour-title" id="tourTitle"></h2>
+    <p class="tour-text" id="tourText"></p>
+
+    <div class="tour-actions">
+      <button type="button" class="tour-skip" id="tourSkip">Pular tutorial</button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="tour-progress" id="tourProgress"></span>
+        <button type="button" class="tour-next" id="tourNext">Prosseguir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="help-popover" id="helpPopover" role="dialog" aria-live="polite" aria-label="Ajuda contextual">
+  <div class="help-badge">Ajuda rápida</div>
+  <h3 class="help-title" id="helpPopoverTitle"></h3>
+  <p class="help-text" id="helpPopoverText"></p>
+  <button type="button" class="help-close" id="helpPopoverClose">Fechar</button>
+</div>
+
+<script>
+(function(){
+  const startButton = document.getElementById('startSimulation');
+  const homeButton = document.getElementById('homeButton');
+  const tutorialButton = document.getElementById('tutorialButton');
+  const restartButton = document.getElementById('restartButton');
+  const helpPopover = document.getElementById('helpPopover');
+  const helpPopoverTitle = document.getElementById('helpPopoverTitle');
+  const helpPopoverText = document.getElementById('helpPopoverText');
+  const helpPopoverClose = document.getElementById('helpPopoverClose');
+  let contextualHelpUnlocked = false;
+
+  function pad2(value) {
+    return String(value).padStart(2, '0');
+  }
+
+  function formatDateTime(date) {
+    return pad2(date.getDate()) + '/' +
+           pad2(date.getMonth() + 1) + '/' +
+           date.getFullYear() + ' às ' +
+           pad2(date.getHours()) + ':' +
+           pad2(date.getMinutes());
+  }
+
+  function formatTime(date) {
+    return pad2(date.getHours()) + ':' + pad2(date.getMinutes());
+  }
+
+  function updateSimulationTimes() {
+    const startedAt = new Date();
+
+    const dauStartedAt = new Date(startedAt.getTime() - (7 * 60 * 1000));
+    const firstMessageAt = new Date(startedAt.getTime() - (1 * 60 * 1000));
+
+    const dauWindowText = document.getElementById('dauWindowText');
+    const initialMessageTime = document.getElementById('initialMessageTime');
+    const conversationPreviewTime = document.getElementById('conversationPreviewTime');
+
+    if (dauWindowText) {
+      dauWindowText.textContent =
+        'Janela de cobrança DAU iniciada em ' +
+        formatDateTime(dauStartedAt) +
+        '⌄';
+    }
+
+    if (initialMessageTime) {
+      initialMessageTime.textContent = formatTime(firstMessageAt);
+    }
+
+    if (conversationPreviewTime) {
+      conversationPreviewTime.textContent = formatTime(firstMessageAt);
+    }
+  }
+
+  function hideContextHelp() {
+    if (helpPopover) helpPopover.classList.remove('active');
+  }
+
+  function showContextHelp(target) {
+    if (!contextualHelpUnlocked || !target || !helpPopover) return;
+    const title = target.getAttribute('data-help-title');
+    const text = target.getAttribute('data-help-text');
+    if (!title || !text) return;
+
+    helpPopoverTitle.textContent = title;
+    helpPopoverText.textContent = text;
+    helpPopover.classList.add('active');
+    helpPopover.classList.remove('placement-right', 'placement-left', 'placement-bottom', 'placement-top');
+
+    const rect = target.getBoundingClientRect();
+    const gap = 12;
+    const width = Math.min(320, window.innerWidth - 24);
+    const estimatedHeight = 170;
+
+    const fitsRight = rect.right + gap + width <= window.innerWidth - 12;
+    const fitsLeft = rect.left - gap - width >= 12;
+    const fitsBottom = rect.bottom + gap + estimatedHeight <= window.innerHeight - 12;
+
+    let left = 12;
+    let top = 12;
+    let placement = 'right';
+
+    if (fitsRight) {
+      placement = 'right';
+      left = rect.right + gap;
+      top = rect.top + (rect.height / 2) - (estimatedHeight / 2);
+    } else if (fitsLeft) {
+      placement = 'left';
+      left = rect.left - width - gap;
+      top = rect.top + (rect.height / 2) - (estimatedHeight / 2);
+    } else if (fitsBottom) {
+      placement = 'bottom';
+      left = rect.left + (rect.width / 2) - (width / 2);
+      top = rect.bottom + gap;
+    } else {
+      placement = 'top';
+      left = rect.left + (rect.width / 2) - (width / 2);
+      top = rect.top - estimatedHeight - gap;
+    }
+
+    if (left + width > window.innerWidth - 12) left = window.innerWidth - width - 12;
+    if (left < 12) left = 12;
+    if (top + estimatedHeight > window.innerHeight - 12) top = window.innerHeight - estimatedHeight - 12;
+    if (top < 12) top = 12;
+
+    helpPopover.style.left = left + 'px';
+    helpPopover.style.top = top + 'px';
+    helpPopover.classList.add('placement-' + placement);
+
+    if (placement === 'right' || placement === 'left') {
+      const arrowTop = Math.max(16, Math.min(estimatedHeight - 28, rect.top - top + (rect.height / 2)));
+      helpPopover.style.setProperty('--arrow-top', arrowTop + 'px');
+    } else {
+      const arrowLeft = Math.max(18, Math.min(width - 28, rect.left - left + (rect.width / 2)));
+      helpPopover.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+
+  if (startButton) {
+    startButton.addEventListener('click', () => {
+      updateSimulationTimes();
+      document.body.classList.add('simulation-started');
+      window.scrollTo(0, 0);
+      setTimeout(startTour, 250);
+    });
+  }
+
+  if (homeButton) {
+    homeButton.addEventListener('click', () => {
+      endTour();
+      hideContextHelp();
+      document.body.classList.remove('simulation-started');
+      window.scrollTo(0, 0);
+    });
+  }
+
+  if (tutorialButton) {
+    tutorialButton.addEventListener('click', () => {
+      hideContextHelp();
+      startTour();
+    });
+  }
+
+  if (restartButton) {
+    restartButton.addEventListener('click', () => {
+      hideFeedback();
+      hideContextHelp();
+      if (tourLayer) tourLayer.classList.remove('active');
+
+      // Cancela qualquer ação pendente do fluxo anterior.
+      clearTimeout(firstReplyTimer);
+      clearTimeout(firstRevealTimer);
+      clearTimeout(secondRevealTimer);
+      clearTimeout(typingTimer);
+      clearTimeout(secondClientReplyTimer);
+      clearTimeout(secondClientTypingTimer);
+      clearTimeout(finalClientReplyTimer);
+      clearTimeout(finalClientTypingTimer);
+      clearTimeout(extraClientMessageTimer);
+      clearTimeout(thirdRevealTimer);
+      clearTimeout(thirdClientTypingTimer);
+      clearTimeout(thirdClientReplyTimer);
+      clearTimeout(fourthRevealTimer);
+
+      firstReplyTimer = null;
+      firstRevealTimer = null;
+      secondRevealTimer = null;
+      typingTimer = null;
+      secondClientReplyTimer = null;
+      secondClientTypingTimer = null;
+      finalClientReplyTimer = null;
+      finalClientTypingTimer = null;
+      extraClientMessageTimer = null;
+      thirdRevealTimer = null;
+      thirdClientTypingTimer = null;
+      thirdClientReplyTimer = null;
+      fourthRevealTimer = null;
+
+      removeTypingIndicator();
+
+      const messages = document.getElementById('messages');
+      const composerInput = document.getElementById('composer');
+
+      // Restaura exatamente o estado inicial da conversa.
+      if (messages && window.initialMessagesHTML) {
+        messages.innerHTML = window.initialMessagesHTML;
+        messages.scrollTop = 0;
+      }
+

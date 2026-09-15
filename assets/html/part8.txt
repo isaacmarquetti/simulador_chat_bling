@@ -1,0 +1,222 @@
+er(button.getAttribute('data-answer-id') || 0);
+        window.simulationResults.secondInteractionAnswer = button.innerText.trim();
+
+        addChatMessage('agent', chosenText);
+
+        const currentSecondBox = document.getElementById('secondInteractionBox');
+        if (currentSecondBox) currentSecondBox.style.display = 'none';
+
+        // Dá tempo para a conversa respirar antes da reação do cliente.
+        clearTimeout(secondClientTypingTimer);
+        clearTimeout(secondClientReplyTimer);
+        clearTimeout(finalClientTypingTimer);
+        clearTimeout(finalClientReplyTimer);
+
+        if (clientOutcome === 'shopee') {
+          secondClientTypingTimer = setTimeout(() => {
+            addTypingIndicator('Cristiano Ronaldo');
+            secondClientTypingTimer = null;
+          }, 900);
+
+          secondClientReplyTimer = setTimeout(() => {
+            removeTypingIndicator();
+            addChatMessage('client', 'Que pena...');
+            secondClientReplyTimer = null;
+
+            extraClientMessageTimer = setTimeout(() => {
+              addChatMessage('client', 'Vou entrar em contato com o suporte da Shopee.');
+
+              extraClientMessageTimer = setTimeout(() => {
+                addChatMessage('client', 'Obrigado');
+                extraClientMessageTimer = null;
+
+                // Depois da reação do cliente, o atendimento segue para a finalização.
+                addThirdInteraction();
+              }, 1200);
+            }, 1200);
+          }, 2400);
+        } else {
+          secondClientTypingTimer = setTimeout(() => {
+            addTypingIndicator('Cristiano Ronaldo');
+            secondClientTypingTimer = null;
+          }, 900);
+
+          secondClientReplyTimer = setTimeout(() => {
+            removeTypingIndicator();
+            addChatMessage('client', 'Ok, vou verificar.');
+            secondClientReplyTimer = null;
+
+            // Aguarda 5 segundos antes da confirmação do cliente.
+            finalClientTypingTimer = setTimeout(() => {
+              addTypingIndicator('Cristiano Ronaldo');
+              finalClientTypingTimer = null;
+            }, 4000);
+
+            finalClientReplyTimer = setTimeout(() => {
+              removeTypingIndicator();
+              addChatMessage('client', 'Opa, deu certo!');
+              finalClientReplyTimer = null;
+
+              extraClientMessageTimer = setTimeout(() => {
+                addChatMessage('client', 'Muito obrigado');
+                extraClientMessageTimer = null;
+
+                addThirdInteraction();
+              }, 1200);
+            }, 5000);
+          }, 2400);
+        }
+      }
+
+      if (interaction === '3') {
+        if (thirdAnswerSelected) return;
+        thirdAnswerSelected = true;
+
+        const chosenText = button.innerHTML;
+        const wasCorrect = button.getAttribute('data-correct') === 'true';
+        const clientOutcome = button.getAttribute('data-client-outcome');
+
+        window.simulationResults = window.simulationResults || {};
+        window.simulationResults.thirdInteractionCorrect = wasCorrect;
+        window.simulationResults.thirdInteractionAnswer = button.innerText.trim();
+
+        addChatMessage('agent', chosenText);
+
+        const currentThirdBox = document.getElementById('thirdInteractionBox');
+        if (currentThirdBox) currentThirdBox.style.display = 'none';
+
+        clearTimeout(thirdClientTypingTimer);
+        clearTimeout(thirdClientReplyTimer);
+
+        thirdClientTypingTimer = setTimeout(() => {
+          addTypingIndicator('Cristiano Ronaldo');
+          thirdClientTypingTimer = null;
+        }, 900);
+
+        thirdClientReplyTimer = setTimeout(() => {
+          removeTypingIndicator();
+
+          if (clientOutcome === 'end-equally') {
+            addChatMessage('client', 'igualmente');
+            thirdClientReplyTimer = null;
+
+            setTimeout(() => {
+              showFeedback();
+            }, 1200);
+            return;
+          }
+
+          if (clientOutcome === 'continue-help') {
+            addChatMessage('client', 'Certo, obrigado pela dica.');
+          } else if (clientOutcome === 'continue-email') {
+            addChatMessage('client', 'Perfeito, anotado!');
+          } else {
+            addChatMessage('client', 'nada mais');
+          }
+
+          thirdClientReplyTimer = null;
+          addFourthInteraction();
+        }, 2400);
+
+        return;
+      }
+
+      if (interaction === '4') {
+        if (fourthAnswerSelected) return;
+        fourthAnswerSelected = true;
+
+        const chosenText = button.innerHTML;
+        const wasCorrect = button.getAttribute('data-correct') === 'true';
+
+        window.simulationResults = window.simulationResults || {};
+        window.simulationResults.fourthInteractionCorrect = wasCorrect;
+        window.simulationResults.fourthInteractionAnswer = button.innerText.trim();
+
+        addChatMessage('agent', chosenText);
+
+        const currentFourthBox = document.getElementById('fourthInteractionBox');
+        if (currentFourthBox) currentFourthBox.style.display = 'none';
+
+        // O atendimento termina aqui e o feedback é exibido somente no final.
+        setTimeout(() => {
+          showFeedback();
+        }, 1200);
+        return;
+      }
+    });
+  }
+
+  const tabs = document.querySelectorAll('.tab');
+  const openList = document.getElementById('openList');
+  const emptyList = document.getElementById('emptyList');
+
+  // "Encerradas" e "Nova conversa" são apenas elementos visuais neste treinamento.
+  // A aba "Abertas" permanece fixa durante toda a simulação.
+  tabs.forEach(t => {
+    if (t.dataset.tab !== 'open') {
+      t.setAttribute('aria-disabled', 'true');
+      t.tabIndex = -1;
+    }
+  });
+
+  const form = document.getElementById('composerForm');
+  const input = document.getElementById('composer');
+  const messages = document.getElementById('messages');
+
+  // O campo de resposta do Octa é apenas visual.
+  if (form) {
+    form.addEventListener('submit', e => e.preventDefault());
+  }
+  if (input) {
+    input.addEventListener('keydown', e => e.preventDefault());
+    input.addEventListener('paste', e => e.preventDefault());
+    input.addEventListener('drop', e => e.preventDefault());
+  }
+
+
+  document.addEventListener('click', (event) => {
+    const closeFeedbackButton = event.target.closest('#feedbackClose');
+    if (closeFeedbackButton) {
+      hideFeedback();
+      return;
+    }
+
+    const restartFeedbackButton = event.target.closest('#feedbackRestart');
+    if (restartFeedbackButton) {
+      hideFeedback();
+
+      // Reinicia usando exatamente a mesma rotina do botão superior.
+      const topRestart = document.getElementById('restartButton');
+      if (topRestart) {
+        topRestart.click();
+      }
+      return;
+    }
+  });
+
+})();
+</script>
+
+<div class="feedback-overlay" id="feedbackOverlay" aria-hidden="true">
+  <div class="feedback-card">
+    <div class="feedback-header">
+      <div>
+        <h2 class="feedback-title">Feedback do atendimento</h2>
+        <p class="feedback-subtitle">Resultado com base nas escolhas realizadas durante a simulação.</p>
+      </div>
+      <div class="feedback-score">
+        <strong id="feedbackScore">0</strong>
+      </div>
+    </div>
+
+    <div class="feedback-list" id="feedbackList"></div>
+
+    <div class="feedback-actions">
+      <button type="button" class="feedback-close" id="feedbackClose">Fechar</button>
+      <button type="button" class="feedback-restart" id="feedbackRestart">Reiniciar simulação</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

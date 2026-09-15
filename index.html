@@ -5,25 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Simulador de Atendimento Bling - Chat</title>
   <style>
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;font-family:Arial,sans-serif}
-    #status{height:100%;display:grid;place-items:center;color:#475569;font-size:14px}
+    html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#1f2937;color:#fff}
+    body{display:grid;place-items:center;min-height:100vh}
+    .loading{text-align:center;padding:24px}
+    .loading strong{display:block;font-size:20px;margin-bottom:8px}
+    .loading span{color:#bbf7d0;font-size:13px}
   </style>
 </head>
 <body>
-  <div id="status">Carregando simulador...</div>
+  <div class="loading" id="loading">
+    <strong>Simulador de Atendimento Bling</strong>
+    <span>Carregando ambiente de treinamento...</span>
+  </div>
+
   <script>
-    (async()=>{
-      try{
-        const url='https://raw.githubusercontent.com/isaacmarquetti/simulador_de_atendimento/main/chat.html';
-        const response=await fetch(url,{cache:'no-store'});
-        if(!response.ok) throw new Error('Falha ao carregar o simulador');
-        const html=await response.text();
+    (async () => {
+      try {
+        const files = Array.from({length: 8}, (_, i) => `assets/html/part${i + 1}.txt`);
+        const responses = await Promise.all(files.map(path => fetch(path, {cache: 'no-store'})));
+
+        for (const response of responses) {
+          if (!response.ok) throw new Error(`Falha ao carregar ${response.url}`);
+        }
+
+        const parts = await Promise.all(responses.map(response => response.text()));
+        const html = parts.join('');
+
         document.open();
         document.write(html);
         document.close();
-      }catch(error){
-        document.getElementById('status').textContent='Não foi possível carregar o simulador.';
+      } catch (error) {
         console.error(error);
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.innerHTML = '<strong>Não foi possível carregar o simulador.</strong><span>Atualize a página e tente novamente.</span>';
+        }
       }
     })();
   </script>

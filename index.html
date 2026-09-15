@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de Atendimento Bling - Chat</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;font-family:Arial,sans-serif}
+    #status{height:100%;display:grid;place-items:center;color:#475569;font-size:14px}
+  </style>
+</head>
+<body>
+  <div id="status">Carregando simulador...</div>
+  <script>
+    (async()=>{
+      try{
+        const url='https://raw.githubusercontent.com/isaacmarquetti/simulador_de_atendimento/main/chat.html';
+        const response=await fetch(url,{cache:'no-store'});
+        if(!response.ok) throw new Error('Falha ao carregar o simulador');
+        const html=await response.text();
+        document.open();
+        document.write(html);
+        document.close();
+      }catch(error){
+        document.getElementById('status').textContent='Não foi possível carregar o simulador.';
+        console.error(error);
+      }
+    })();
+  </script>
+</body>
+</html>

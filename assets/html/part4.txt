@@ -1,0 +1,226 @@
+ notas fiscais, tributações, CFOP, rejeições e temas fiscais em geral."><span>Fiscal</span><span>-5</span></button>
+      <button data-help-title="Grupo Logística" data-help-text="Filtra as conversas do grupo Logística, com temas como envios, etiquetas, transportadoras e processos de entrega."><span>Logística</span><span>2</span></button>
+      <button data-help-title="Grupo Minha Conta" data-help-text="Filtra as conversas do grupo Minha Conta, com assuntos ligados ao cadastro, plano, acesso e informações administrativas da conta."><span>Minha Conta</span><span>4</span></button>
+    </div>
+    <div class="agent"><b>Atendente</b><span>Disponível</span></div>
+  </aside>
+
+  <section class="conversations" data-tour="conversations">
+    <div class="conv-head"><span>Suas conversas</span><span>☷</span></div>
+    <div class="tabs">
+      <button class="tab active" data-tab="open" data-help-title="Abertas" data-help-text="Mostra as conversas que ainda estão em andamento e aguardam acompanhamento ou resposta do atendente.">Abertas</button>
+      <button class="tab tab-static" type="button" data-tab="closed" data-help-title="Encerradas" data-help-text="Mostra os atendimentos que já foram finalizados e encerrados no sistema.">Encerradas</button>
+      <button class="tab tab-static" type="button" data-tab="new" data-help-title="Nova conversa" data-help-text="Permite iniciar uma nova conversa com um cliente pelo Octa.">Nova conversa</button>
+    </div>
+    <div class="alert">● &nbsp; 4 conversas com o tempo excedido</div>
+    <div id="openList">
+      <button class="conv-item" data-help-title="Card da conversa" data-help-text="Este cartão resume a conversa disponível. A tarja cinza mostra o atendente responsável, o nome principal mostra o cliente e a linha inferior traz a última mensagem e o status.">
+        <span class="tag">Atendente</span>
+        <div class="name">Cristiano Ronaldo</div>
+        <div class="preview" id="conversationPreview">Boa tarde, preciso de um auxílio, pois não estou conseguindo fazer a exportação...</div>
+        <div class="preview-time" id="conversationPreviewTime">--:--</div>
+      </button>
+    </div>
+    <div id="emptyList" style="display:none; padding:25px; text-align:center; color:#94a3b8; font-size:13px;">Nenhuma conversa nesta aba.</div>
+  </section>
+
+  <main class="chat" data-tour="chat">
+    <div class="chat-head">
+      <div class="avatar">CR</div>
+      <div class="chat-name">Cristiano Ronaldo</div>
+      <div class="chat-actions">
+        <button data-help-title="Atribuir conversa" data-help-text="Este botão representa a atribuição da conversa para um atendente responsável.">♙</button><button data-help-title="Transferir conversa" data-help-text="Este botão representa a transferência do atendimento para outro setor, fila ou atendente.">↔</button><button data-help-title="Concluir atendimento" data-help-text="Este botão representa a conclusão ou finalização do atendimento atual.">✓</button><button data-help-title="Mais opções" data-help-text="Aqui ficam opções adicionais da conversa, como ações complementares do atendimento.">⋮</button>
+      </div>
+    </div>
+    <div class="statusline"><span>◷ 23:24</span><span class="center" id="dauWindowText">Janela de cobrança DAU iniciada em --/--/---- às --:--⌄</span><span>●</span></div>
+
+    <div class="messages" id="messages">
+<div class="system">atribuiu a conversa para <b>Atendente</b></div>
+      <div class="bubble client">Boa tarde, preciso de um auxílio, pois não estou conseguindo fazer a exportação de produtos para a minha loja virtual.<div class="stamp" id="initialMessageTime">--:--</div></div>
+
+      <div class="scenario-box" id="firstInteractionBox" style="display:none;">
+            <div class="scenario-title">Escolha sua resposta</div>
+            <div class="scenario-subtitle">Selecione a mensagem que deseja enviar ao cliente:</div>
+      
+            <div class="response-options" id="responseOptions">
+              <button type="button" class="response-option" data-interaction="1" data-answer-id="1" data-correct="true">Olá, Cristiano Ronaldo! Boa tarde! Poderia dar mais detalhes sobre sua questão para eu analisar?</button>
+
+              <button type="button" class="response-option" data-interaction="1" data-answer-id="2" data-correct="false">Olá! Poderia dar mais detalhes sobre o problema?</button>
+
+              <button type="button" class="response-option" data-interaction="1" data-answer-id="3" data-correct="false">Boa tarde, senhor Cristiano Ronaldo. Qual erro está aparecendo na exportação?</button>
+
+              <button type="button" class="response-option" data-interaction="1" data-answer-id="4" data-correct="false">Olá, beleza meu caro? Pode me contar mais sobre essa questão?</button>
+            </div>
+          </div>
+      
+    </div>
+
+    
+    <div class="composer" data-tour="composer">
+      <div class="composer-tabs"><b>Mensagem</b><span>Anotações internas</span><span>✣ WOZ</span><span class="summary">✨ Resumo</span></div>
+      <form id="composerForm">
+        <textarea id="composer" placeholder="Digite / para adicionar uma Mensagem Pronta" readonly aria-readonly="true"></textarea>
+        <div class="toolbar">
+          <button type="button" data-help-title="Ações rápidas" data-help-text="Este botão representa atalhos e ações rápidas disponíveis para o atendente.">⚡</button><button type="button" data-help-title="Anexos" data-help-text="Este botão representa o envio ou anexação de arquivos durante o atendimento.">⌇</button><button type="button" data-help-title="Áudio" data-help-text="Este botão representa o envio de mensagens de áudio, quando disponível no canal de atendimento.">♩</button>
+          <button type="button" data-help-title="Negrito" data-help-text="Aplica formatação em negrito ao texto da resposta."><b>B</b></button><button type="button" data-help-title="Itálico" data-help-text="Aplica formatação em itálico ao texto da resposta."><i>I</i></button><button type="button" data-help-title="Emoji" data-help-text="Abre opções de emoji para deixar a comunicação mais adequada ao canal.">☺</button><button type="button" data-help-title="Outras formatações" data-help-text="Representa opções extras de formatação ou organização da mensagem.">☷</button>
+          <button class="send" type="button" aria-label="Enviar">➤</button>
+        </div>
+      </form>
+    </div>
+    <div class="hint"><b>Enter</b> para enviar ou <b>Shift + Enter</b> para pular a linha.</div>
+  </main>
+
+  <aside class="details" data-tour="details">
+    <div class="details-top">
+      <div class="details-title"><span>›</span><span>Detalhes</span></div>
+
+      <div class="details-status">Sem status <span>⌄</span></div>
+
+      <div class="details-summary">
+        <div><b>ID:</b>&nbsp;&nbsp;0000000000</div>
+        <div><b>Agente atribuído:</b>&nbsp;&nbsp;Atendente</div>
+        <div><b>Grupo atribuído:</b>&nbsp;&nbsp;Ecommerce</div>
+      </div>
+    </div>
+
+    <section class="details-card">
+      <button type="button" class="details-head"
+        data-help-title="Sobre a conversa"
+        data-help-text="Reúne informações relacionadas ao atendimento atual, como tags, origem da conversa e campos preenchidos durante o contato.">
+        <span>Sobre a conversa</span><span>⌃</span>
+      </button>
+
+      <div class="details-content">
+        <span class="details-label">Tags</span>
+        <div class="details-tags">
+          <span class="details-tag">cliente-nao-pagante</span>
+          <span class="details-tag">Encaminhou Fiscal</span>
+          <span class="details-tag">Fiscal encaminhou ao WOZ</span>
+          <span class="details-tag">WOZ direcionou a conversa</span>
+          <span class="details-tag">encerramento</span>
+          <span class="details-tag details-tag-add">＋ adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Origem</span>
+          <div class="origin-row">
+            <span class="origin-icon">■</span>
+            <span class="details-value">Chat no site</span>
+          </div>
+        </div>
+
+        <span class="details-label">Campos da conversa</span>
+
+        <div class="details-field">
+          <span class="details-label">Vínculo de incidente</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Link_tdb</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Contato - amazon</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Data_evento</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Nome_evento</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Nome_cliente</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Resumo do atendimento</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Status da conta</span>
+          <span class="details-value">Contas Pagas</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Retorno de ticket</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Id de compra ig</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-section-line">
+          <span>Eventos da conversa</span><span>⌄</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="details-card">
+      <button type="button" class="details-head"
+        data-help-title="Dados do contato"
+        data-help-text="Apresenta os dados cadastrais e informações da conta do cliente que podem auxiliar durante a análise do atendimento.">
+        <span>Dados do contato</span><span>⌃</span>
+      </button>
+
+      <div class="details-content">
+        <div class="lead-choice">
+          <span><span class="radio-dot selected"></span>Lead</span>
+          <span><span class="radio-dot"></span>Cliente</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Nome</span>
+          <span class="details-value">Cristiano Ronaldo</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Email</span>
+          <span class="details-value">cr7@robozaotech.com.br</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Telefone</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Responsável</span>
+          <span class="details-value">Atendente</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Organização</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">CNPJ da Empresa</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">CNPJ</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Responsável</span>
+          <span class="details-add">＋ Adicionar</span>
+        </div>
+
+        <div class="details-field">
+          <span class="details-label">Nome do contato</span>
+          <span class="details-add">＋ Adicionar</span>
+        </d

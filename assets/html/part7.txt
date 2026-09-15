@@ -1,0 +1,285 @@
+me = 'scenario-box';
+    box.id = 'secondInteractionBox';
+    box.style.display = 'none';
+    box.innerHTML = `
+      <div class="scenario-title">Escolha sua resposta</div>
+      <div class="scenario-subtitle">Selecione a mensagem que deseja enviar ao cliente:</div>
+
+      <div class="response-options">
+        <button type="button" class="response-option" data-interaction="2" data-answer-id="1" data-correct="false" data-client-outcome="shopee">Pelo que você está me relatando, deve haver algum problema de comunicação com a Shopee e, portanto, você deverá entrar em contato com eles para mais detalhes sobre essa questão.</button>
+
+        <button type="button" class="response-option" data-interaction="2" data-answer-id="2" data-correct="true" data-client-outcome="resolved">Certo, com relação a solução, o procedimento é simples: em Cadastros &gt; Produtos, ao selecionar algum item que você deseja exportar, o botão 'Exportar produtos multiloja' ficará ativo para que você realize o processo de exportação.</button>
+
+        <button type="button" class="response-option" data-interaction="2" data-answer-id="3" data-correct="false" data-client-outcome="resolved">Certo! Para mais informações sobre esse processo, acesse a Central de Ajuda do Bling e pesquise por conteúdos relacionados à Shopee e à exportação de produtos. Lá você encontrará orientações sobre como realizar a exportação.</button>
+      </div>
+    `;
+
+    messages.appendChild(box);
+    messages.scrollTop = messages.scrollHeight;
+
+    clearTimeout(secondRevealTimer);
+    secondRevealTimer = setTimeout(() => {
+      box.style.display = 'block';
+      messages.scrollTop = messages.scrollHeight;
+      secondRevealTimer = null;
+    }, 1300);
+  }
+
+
+
+  function buildFeedback() {
+    const results = window.simulationResults || {};
+    const firstChoice = Number(results.firstInteractionChoice || 0);
+
+    const greetingOk = firstChoice === 1 || firstChoice === 3;
+    const formalityOk = firstChoice === 1 || firstChoice === 2;
+
+    let greetingExplanation = '';
+    let formalityExplanation = '';
+    let solutionExplanation = '';
+
+    const secondChoice = Number(results.secondInteractionChoice || 0);
+
+    if (firstChoice === 2 || firstChoice === 4) {
+      greetingExplanation =
+        'A saudação ficou incompleta. Como o cliente iniciou o contato com “Boa tarde”, o atendente também deve responder ao período do dia, mantendo uma abertura cordial e adequada.';
+    }
+
+    if (firstChoice === 3) {
+      formalityExplanation =
+        'Evite tratamentos como “senhor”, “senhora” ou “meu caro”. No atendimento via chat, prefira “você”, mantendo uma comunicação profissional, próxima e natural.';
+    }
+
+    if (firstChoice === 4) {
+      formalityExplanation =
+        'Evite gírias e expressões excessivamente informais, como “beleza” e “meu caro”. Prefira abordagens como “Tudo bem?” ou “Tudo certo?” e utilize “você” ao se dirigir ao cliente.';
+    }
+
+    if (secondChoice === 1) {
+      solutionExplanation =
+        'Não direcione o cliente para o suporte da loja virtual antes de analisar o caso e confirmar que a situação está realmente fora do escopo do Bling. Esse encaminhamento só deve ser feito quando houver orientação expressa da liderança técnica de que o assunto não é de nossa responsabilidade.';
+    }
+
+    if (secondChoice === 3) {
+      solutionExplanation =
+        'Sempre conduza o cliente com orientações claras e objetivas para a resolução do problema. Apenas pedir que ele pesquise na Central de Ajuda transfere a busca pela solução ao cliente e demonstra falta de proatividade no atendimento.';
+    }
+
+    const criteria = [
+      {
+        name:'Saudação',
+        ok:greetingOk,
+        explanation:greetingExplanation
+      },
+      {
+        name:'Formalidade',
+        ok:formalityOk,
+        explanation:formalityExplanation
+      },
+      {
+        name:'Fornecimento da solução correta',
+        ok:results.secondInteractionCorrect === true,
+        explanation:solutionExplanation
+      },
+      {
+        name:'Oferta de ajuda adicional',
+        ok:results.thirdInteractionCorrect === true,
+        explanation:''
+      },
+      {
+        name:'Deixar à disposição',
+        ok:results.fourthInteractionCorrect === true,
+        explanation:''
+      }
+    ];
+
+    const score = criteria.reduce((total, item) => total + (item.ok ? 20 : 0), 0);
+
+    const scoreEl = document.getElementById('feedbackScore');
+    const listEl = document.getElementById('feedbackList');
+
+    if (scoreEl) {
+      scoreEl.textContent = score;
+
+      const scoreBox = scoreEl.closest('.feedback-score');
+      if (scoreBox) {
+        scoreBox.classList.remove(
+          'score-100',
+          'score-80',
+          'score-60',
+          'score-40',
+          'score-20',
+          'score-0'
+        );
+        scoreBox.classList.add('score-' + score);
+      }
+    }
+
+    if (listEl) {
+      listEl.innerHTML = criteria.map(item => `
+        <div class="feedback-row ${!item.ok ? 'feedback-warning' : ''}">
+          <div class="feedback-copy">
+            <div class="feedback-name">${item.name}</div>
+            ${!item.ok && item.explanation
+              ? `<div class="feedback-explanation">${item.explanation}</div>`
+              : ''}
+          </div>
+          <div class="feedback-result">
+            <span class="feedback-status ${item.ok ? 'ok' : 'no'}">
+              ${item.ok ? 'Atendeu' : 'Não atendeu'}
+            </span>
+            <span class="feedback-points">${item.ok ? '20' : '0'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    return score;
+  }
+
+  function showFeedback() {
+    buildFeedback();
+    const overlay = document.getElementById('feedbackOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function hideFeedback() {
+    const overlay = document.getElementById('feedbackOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function addThirdInteraction() {
+    const messages = document.getElementById('messages');
+    if (!messages || document.getElementById('thirdInteractionBox')) return;
+
+    const commonNotice = `--- Caso não receba sua resposta em até 5 minutos, a conversa será encerrada, mas se precisar de algo mais, é só nos chamar! 🙂`;
+
+    const box = document.createElement('div');
+    box.className = 'scenario-box';
+    box.id = 'thirdInteractionBox';
+    box.style.display = 'none';
+    box.innerHTML = `
+      <div class="scenario-title">Escolha sua resposta</div>
+      <div class="scenario-subtitle">Selecione a mensagem que deseja enviar ao cliente:</div>
+
+      <div class="response-options">
+        <button type="button" class="response-option" data-interaction="3" data-correct="true" data-client-outcome="continue-correct">Imagina! 😊 Antes de finalizarmos, há mais alguma dúvida que posso esclarecer? ${commonNotice}</button>
+
+        <button type="button" class="response-option" data-interaction="3" data-correct="false" data-client-outcome="end-equally">Imagina! 😊 Vou encerrar o atendimento por aqui. O Bling agradece o contato e tenha uma ótima semana. ${commonNotice}</button>
+
+        <button type="button" class="response-option" data-interaction="3" data-correct="false" data-client-outcome="continue-help">Por nada! Caso haja mais alguma dúvida, a Central de Ajuda tem diversos artigos sobre os mais variados temas. Evite filas e acesse: https://ajuda.bling.com.br/ ${commonNotice}</button>
+
+        <button type="button" class="response-option" data-interaction="3" data-correct="false" data-client-outcome="continue-email">Imagina! Caso haja mais alguma dúvida, deixo à disposição meu e-mail para demais dúvidas sobre este assunto: atendente@bling.com.br ${commonNotice}</button>
+      </div>
+    `;
+
+    messages.appendChild(box);
+    messages.scrollTop = messages.scrollHeight;
+
+    clearTimeout(thirdRevealTimer);
+    thirdRevealTimer = setTimeout(() => {
+      box.style.display = 'block';
+      messages.scrollTop = messages.scrollHeight;
+      thirdRevealTimer = null;
+    }, 1400);
+  }
+
+  function addFourthInteraction() {
+    const messages = document.getElementById('messages');
+    if (!messages || document.getElementById('fourthInteractionBox')) return;
+
+    const box = document.createElement('div');
+    box.className = 'scenario-box';
+    box.id = 'fourthInteractionBox';
+    box.style.display = 'none';
+    box.innerHTML = `
+      <div class="scenario-title">Escolha sua resposta</div>
+      <div class="scenario-subtitle">Selecione a mensagem de encerramento:</div>
+
+      <div class="response-options">
+        <button type="button" class="response-option" data-interaction="4" data-correct="true">Agradecemos pelo contato! Tenha um excelente dia e, se precisar, estamos à disposição. 😊</button>
+
+        <button type="button" class="response-option" data-interaction="4" data-correct="false">Valeu, meu caro! Tenha um excelente dia e, se precisar, estamos à disposição. 😊</button>
+
+        <button type="button" class="response-option" data-interaction="4" data-correct="false">Agradecemos pelo contato! Tenha um bom dia e uma excelente semana, até! 😊</button>
+
+        <button type="button" class="response-option" data-interaction="4" data-correct="false">Obrigado pelo contato! Vou encerrar o chamado. Tenha um excelente dia! 😊</button>
+      </div>
+    `;
+
+    messages.appendChild(box);
+    messages.scrollTop = messages.scrollHeight;
+
+    clearTimeout(fourthRevealTimer);
+    fourthRevealTimer = setTimeout(() => {
+      box.style.display = 'block';
+      messages.scrollTop = messages.scrollHeight;
+      fourthRevealTimer = null;
+    }, 1400);
+  }
+
+  const messagesArea = document.getElementById('messages');
+
+  if (messagesArea) {
+    messagesArea.addEventListener('click', (event) => {
+      const button = event.target.closest('.response-option');
+      if (!button || !messagesArea.contains(button)) return;
+
+      const interaction = button.getAttribute('data-interaction') || '1';
+
+      if (interaction === '1') {
+        if (firstAnswerSelected) return;
+        firstAnswerSelected = true;
+
+        const chosenText = button.innerHTML;
+        const wasCorrect = button.getAttribute('data-correct') === 'true';
+
+        window.simulationResults = window.simulationResults || {};
+        window.simulationResults.firstInteractionCorrect = wasCorrect;
+        window.simulationResults.firstInteractionChoice = Number(button.getAttribute('data-answer-id') || 0);
+        window.simulationResults.firstInteractionAnswer = button.innerText.trim();
+
+        addChatMessage('agent', chosenText);
+
+        const currentFirstBox = document.getElementById('firstInteractionBox');
+        if (currentFirstBox) currentFirstBox.style.display = 'none';
+
+        clearTimeout(firstRevealTimer);
+        clearTimeout(typingTimer);
+        clearTimeout(firstReplyTimer);
+
+        typingTimer = setTimeout(() => {
+          addTypingIndicator('Cristiano Ronaldo');
+          typingTimer = null;
+        }, 800);
+
+        firstReplyTimer = setTimeout(() => {
+          removeTypingIndicator();
+          addChatMessage(
+            'client',
+            'Percebi que o botão ‘Exportar produtos multiloja’ está inativo e não consigo realizar a exportação. Trabalho com a Shopee.'
+          );
+          addSecondInteraction();
+          firstReplyTimer = null;
+        }, 2300);
+
+        return;
+      }
+
+      if (interaction === '2') {
+        if (secondAnswerSelected) return;
+        secondAnswerSelected = true;
+
+        const chosenText = button.innerHTML;
+        const wasCorrect = button.getAttribute('data-correct') === 'true';
+        const clientOutcome = button.getAttribute('data-client-outcome') || 'resolved';
+
+        window.simulationResults = window.simulationResults || {};
+        window.simulationResults.secondInteractionCorrect = wasCorrect;
+        window.simulationResults.secondInteractionChoice = Numb

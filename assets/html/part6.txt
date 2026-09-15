@@ -1,0 +1,318 @@
+      updateSimulationTimes();
+
+      if (composerInput) composerInput.value = '';
+
+      const conversationPreview = document.getElementById('conversationPreview');
+      if (conversationPreview) {
+        conversationPreview.textContent = 'Boa tarde, preciso de um auxílio, pois não estou conseguindo fazer a exportação...';
+      }
+
+      firstAnswerSelected = false;
+      secondAnswerSelected = false;
+      thirdAnswerSelected = false;
+      fourthAnswerSelected = false;
+      window.simulationResults = {};
+      contextualHelpUnlocked = true;
+
+      // Recomeça o fluxo como no início: a primeira alternativa surge após o delay.
+      revealFirstInteraction();
+
+      window.scrollTo(0, 0);
+    });
+  }
+
+
+  const initialMessagesElement = document.getElementById('messages');
+  window.initialMessagesHTML = initialMessagesElement ? initialMessagesElement.innerHTML : '';
+
+  const tourLayer = document.getElementById('tourLayer');
+  const tourHighlight = document.getElementById('tourHighlight');
+  const tourTooltip = document.getElementById('tourTooltip');
+  const tourTitle = document.getElementById('tourTitle');
+  const tourText = document.getElementById('tourText');
+  const tourProgress = document.getElementById('tourProgress');
+  const tourNext = document.getElementById('tourNext');
+  const tourSkip = document.getElementById('tourSkip');
+
+  const tourSteps = [
+    {
+      selector:'.app',
+      title:'Bem-vindo ao ambiente de simulação de atendimento ao chat!',
+      html:'O <strong>Octadesk</strong> é a ferramenta de chat utilizada pelo Bling para realizar o suporte e manter o contato com seus clientes durante os atendimentos.<br><br>' +
+           'Neste ambiente de simulação, você irá conhecer as principais áreas da ferramenta e praticar o fluxo de atendimento utilizado no dia a dia.<br><br>' +
+           '<strong>Antes de começar, algumas orientações importantes:</strong><br><br>' +
+           '• <strong class="tour-label-green">Explore os botões:</strong> ao longo da simulação, alguns botões terão balões com explicações sobre suas funcionalidades.<br><br>' +
+           '• <strong class="tour-label-green">Pratique o procedimento:</strong> este ambiente foi criado para simular o fluxo de atendimento e ajudar você a seguir corretamente cada etapa.<br><br>' +
+           '• <strong class="tour-label-green">Foque nas funcionalidades:</strong> o layout pode apresentar algumas diferenças em relação à versão atual do Octa.<br><br>' +
+           '• <strong class="tour-label-green">O mais importante:</strong> compreender a função de cada recurso e aplicar corretamente o fluxo de atendimento.',
+      center:true,
+      noHighlight:true
+    },
+    {
+      selector:'[data-tour="rail"]',
+      title:'Barra lateral principal',
+      text:'Esta é a barra lateral principal do Octa. Nela ficam os atalhos para a página inicial, Conversas, Base de Conhecimento, Ajuda, Notificações, Configurações e o perfil do atendente.'
+    },
+    {
+      selector:'[data-tour="menu"]',
+      title:'Menu do Octa Conversas',
+      text:'Nesta coluna ficam os filtros e grupos de atendimento. Aqui você consegue navegar entre suas conversas, atendimentos não respondidos, grupos como ERP, Fiscal, Logística e outros.'
+    },
+    {
+      selector:'[data-tour="conversations"]',
+      title:'Suas conversas',
+      text:'Aqui aparecem os atendimentos disponíveis para você. O nome em cinza identifica o atendente responsável e logo abaixo aparece o cliente, a prévia da última mensagem e o status da conversa.'
+    },
+    {
+      selector:'[data-tour="chat"]',
+      title:'Área da conversa',
+      text:'Este é o histórico do atendimento. As mensagens do cliente e do atendente ficam registradas aqui, junto com horários e avisos do sistema.'
+    },
+    {
+      selector:'[data-tour="details"]',
+      title:'Dados do cliente',
+      text:'Nesta coluna ficam os detalhes da conversa e do contato, incluindo tags, origem, campos do atendimento, dados da conta, organização e históricos. Essas informações auxiliam na análise do atendimento.'
+    }
+  ];
+
+  let tourIndex = 0;
+
+  function positionTour() {
+    if (!tourLayer.classList.contains('active')) return;
+    const step = tourSteps[tourIndex];
+    const target = document.querySelector(step.selector);
+    if (!target) return;
+
+    const r = target.getBoundingClientRect();
+    const pad = 5;
+
+    tourTitle.textContent = step.title;
+    tourText.innerHTML = step.html || step.text;
+    if (!step.center) tourTooltip.style.transform = 'none';
+    tourProgress.textContent = (tourIndex + 1) + ' de ' + tourSteps.length;
+    tourNext.textContent = tourIndex === tourSteps.length - 1 ? 'Concluir tutorial' : 'Prosseguir';
+    tourSkip.style.display = step.hideSkip ? 'none' : 'inline-block';
+
+    if (step.center) {
+      tourTooltip.classList.add('centered');
+
+      if (step.noHighlight) {
+        tourHighlight.style.display = 'block';
+        tourHighlight.style.left = '0px';
+        tourHighlight.style.top = '0px';
+        tourHighlight.style.width = '100vw';
+        tourHighlight.style.height = '100vh';
+        tourHighlight.style.border = '0';
+        tourHighlight.style.borderRadius = '0';
+        tourHighlight.style.background = 'rgba(15,23,42,.58)';
+        tourHighlight.style.boxShadow = 'none';
+      } else {
+        tourHighlight.style.display = 'block';
+        tourHighlight.style.border = '3px solid #22c55e';
+        tourHighlight.style.borderRadius = '10px';
+        tourHighlight.style.background = 'transparent';
+        tourHighlight.style.boxShadow = '0 0 0 9999px rgba(15,23,42,.58)';
+        tourHighlight.style.left = (r.left - pad) + 'px';
+        tourHighlight.style.top = (r.top - pad) + 'px';
+        tourHighlight.style.width = (r.width + pad * 2) + 'px';
+        tourHighlight.style.height = (r.height + pad * 2) + 'px';
+      }
+
+      tourTooltip.style.left = '50%';
+      tourTooltip.style.top = '50%';
+      tourTooltip.style.transform = 'translate(-50%, -50%)';
+      return;
+    }
+
+    tourTooltip.classList.remove('centered');
+    tourTooltip.style.transform = 'none';
+    tourHighlight.style.display = 'block';
+    tourHighlight.style.border = '3px solid #22c55e';
+    tourHighlight.style.borderRadius = '10px';
+    tourHighlight.style.background = 'transparent';
+    tourHighlight.style.boxShadow = '0 0 0 9999px rgba(15,23,42,.58)';
+    tourHighlight.style.left = (r.left - pad) + 'px';
+    tourHighlight.style.top = (r.top - pad) + 'px';
+    tourHighlight.style.width = (r.width + pad * 2) + 'px';
+    tourHighlight.style.height = (r.height + pad * 2) + 'px';
+
+    // Decide automaticamente de que lado o balão cabe melhor.
+    const tooltipWidth = Math.min(360, window.innerWidth - 32);
+    const tooltipHeight = 210;
+    const gap = 14;
+
+    let left = r.right + gap;
+    let top = r.top + 12;
+
+    if (left + tooltipWidth > window.innerWidth - 12) {
+      left = r.left - tooltipWidth - gap;
+    }
+    if (left < 12) {
+      left = Math.max(12, Math.min(window.innerWidth - tooltipWidth - 12, r.left + 12));
+      top = r.bottom + gap;
+    }
+    if (top + tooltipHeight > window.innerHeight - 12) {
+      top = Math.max(12, window.innerHeight - tooltipHeight - 12);
+    }
+
+    tourTooltip.style.left = left + 'px';
+    tourTooltip.style.top = top + 'px';
+  }
+
+  function startTour() {
+    tourIndex = 0;
+    tourLayer.classList.add('active');
+    requestAnimationFrame(positionTour);
+  }
+
+  function endTour() {
+    tourLayer.classList.remove('active');
+    contextualHelpUnlocked = true;
+  }
+
+  tourNext.addEventListener('click', () => {
+    if (tourIndex < tourSteps.length - 1) {
+      tourIndex += 1;
+      positionTour();
+    } else {
+      endTour();
+      revealFirstInteraction();
+    }
+  });
+
+  tourSkip.addEventListener('click', () => {
+    endTour();
+    revealFirstInteraction();
+  });
+  window.addEventListener('resize', positionTour);
+  window.addEventListener('scroll', positionTour, true);
+
+
+  if (helpPopoverClose) {
+    helpPopoverClose.addEventListener('click', hideContextHelp);
+  }
+
+  document.addEventListener('click', (event) => {
+    if (tourLayer.classList.contains('active')) return;
+
+    const insidePopover = event.target.closest('#helpPopover');
+    const helpButton = event.target.closest('button[data-help-title]');
+
+    if (insidePopover) return;
+
+    if (helpButton && document.body.classList.contains('simulation-started')) {
+      setTimeout(() => showContextHelp(helpButton), 0);
+      return;
+    }
+
+    hideContextHelp();
+  });
+
+  window.addEventListener('resize', hideContextHelp);
+  window.addEventListener('scroll', hideContextHelp, true);
+
+
+  let firstAnswerSelected = false;
+  let secondAnswerSelected = false;
+  let thirdAnswerSelected = false;
+  let fourthAnswerSelected = false;
+  let firstReplyTimer = null;
+  let firstRevealTimer = null;
+  let secondRevealTimer = null;
+  let typingTimer = null;
+  let secondClientReplyTimer = null;
+  let secondClientTypingTimer = null;
+  let finalClientReplyTimer = null;
+  let finalClientTypingTimer = null;
+  let extraClientMessageTimer = null;
+  let thirdRevealTimer = null;
+  let thirdClientTypingTimer = null;
+  let thirdClientReplyTimer = null;
+  let fourthRevealTimer = null;
+
+  function updateConversationPreview(sender, content, isHtml = true) {
+    const preview = document.getElementById('conversationPreview');
+    if (!preview) return;
+
+    let text = content;
+
+    if (isHtml) {
+      const temp = document.createElement('div');
+      temp.innerHTML = content;
+      text = temp.textContent || temp.innerText || '';
+    }
+
+    text = String(text).replace(/\s+/g, ' ').trim();
+
+    // No Octa, mensagens enviadas pelo atendente aparecem com o indicador de leitura.
+    if (sender === 'agent') {
+      preview.innerHTML = '<span class="double-check">✓✓</span>' + text;
+    } else {
+      preview.textContent = text;
+    }
+
+    const previewTime = document.getElementById('conversationPreviewTime');
+    if (previewTime) {
+      previewTime.textContent = formatTime(new Date());
+    }
+  }
+
+  function addChatMessage(sender, htmlMessage) {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + sender;
+    bubble.innerHTML = htmlMessage;
+
+    const stamp = document.createElement('div');
+    stamp.className = 'stamp';
+    if (sender === 'agent') {
+      stamp.innerHTML = 'Agora <span class="double-check">✓✓</span>';
+    } else {
+      stamp.textContent = 'Agora';
+    }
+    bubble.appendChild(stamp);
+
+    const messages = document.getElementById('messages');
+    messages.appendChild(bubble);
+    messages.scrollTop = messages.scrollHeight;
+
+    updateConversationPreview(sender, htmlMessage, true);
+  }
+
+  function addTypingIndicator(name) {
+    const messages = document.getElementById('messages');
+    if (!messages || document.getElementById('typingIndicator')) return;
+
+    const indicator = document.createElement('div');
+    indicator.id = 'typingIndicator';
+    indicator.className = 'typing-indicator';
+    indicator.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+
+    messages.appendChild(indicator);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function removeTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+  }
+
+  function revealFirstInteraction() {
+    clearTimeout(firstRevealTimer);
+    const box = document.getElementById('firstInteractionBox');
+    const messages = document.getElementById('messages');
+    if (!box || firstAnswerSelected) return;
+
+    box.style.display = 'none';
+    firstRevealTimer = setTimeout(() => {
+      box.style.display = 'block';
+      if (messages) messages.scrollTop = messages.scrollHeight;
+      firstRevealTimer = null;
+    }, 1400);
+  }
+
+  function addSecondInteraction() {
+    const messages = document.getElementById('messages');
+    if (!messages || document.getElementById('secondInteractionBox')) return;
+
+    const box = document.createElement('div');
+    box.classNa

@@ -2,68 +2,42 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Simulador de Atendimento Bling - Chat</title>
   <style>
-    html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#1f2937;color:#fff}
+    html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;background:#1f2937;color:#fff}
     body{display:grid;place-items:center;min-height:100vh}
-    .loading{text-align:center;padding:24px}
-    .loading strong{display:block;font-size:20px;margin-bottom:8px}
-    .loading span{color:#bbf7d0;font-size:13px}
+    .loading{text-align:center;padding:24px}.loading strong{display:block;font-size:20px;margin-bottom:8px}.loading span{font-size:14px;color:#cbd5e1}
   </style>
 </head>
 <body>
-  <div class="loading" id="loading">
-    <strong>Simulador de Atendimento Bling</strong>
-    <span>Carregando ambiente de treinamento...</span>
-  </div>
-
+  <div class="loading"><strong>Carregando simulador...</strong><span>Aguarde um instante.</span></div>
   <script>
     (async () => {
       try {
-        const files = Array.from({length: 8}, (_, i) => `assets/html/part${i + 1}.txt`);
-        const responses = await Promise.all(files.map(path => fetch(path, {cache: 'no-store'})));
-
-        for (const response of responses) {
-          if (!response.ok) throw new Error(`Falha ao carregar ${response.url}`);
-        }
-
-        const parts = await Promise.all(responses.map(response => response.text()));
-        const responsiveFix = `
-<style>
-  .intro-title {
-    font-size:clamp(30px, 4.2vw, 42px) !important;
-    white-space:nowrap;
-  }
-
-  @media (max-width:650px) {
-    .intro-screen { padding:16px !important; }
-    .intro-title {
-      white-space:normal;
-      font-size:30px !important;
-      line-height:1.08 !important;
-    }
-    .intro-subtitle {
-      font-size:18px !important;
-      margin-bottom:18px !important;
-    }
-    .intro-content { padding:22px 20px 18px !important; }
-    .intro-item { font-size:15px !important; }
-    .intro-footer { padding:16px 20px !important; }
-  }
-</style>`;
-
-        const html = parts.join('').replace('</head>', responsiveFix + '</head>');
-
+        const files = [
+          'deploy/v20260916_part1.txt',
+          'deploy/v20260916_part2.txt',
+          'deploy/v20260916_part3.txt'
+        ];
+        const parts = await Promise.all(files.map(async file => {
+          const response = await fetch(file + '?v=20260916');
+          if (!response.ok) throw new Error('Falha ao carregar ' + file);
+          return (await response.text()).trim();
+        }));
+        const b64 = parts.join('');
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        if (!('DecompressionStream' in window)) throw new Error('Navegador sem suporte à descompactação necessária.');
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        const html = await new Response(stream).text();
         document.open();
         document.write(html);
         document.close();
       } catch (error) {
+        document.body.innerHTML = '<div class="loading"><strong>Não foi possível carregar o simulador.</strong><span>' + error.message + '</span></div>';
         console.error(error);
-        const loading = document.getElementById('loading');
-        if (loading) {
-          loading.innerHTML = '<strong>Não foi possível carregar o simulador.</strong><span>Atualize a página e tente novamente.</span>';
-        }
       }
     })();
   </script>
